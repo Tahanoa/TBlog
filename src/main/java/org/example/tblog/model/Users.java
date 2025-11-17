@@ -13,6 +13,7 @@ public class Users {
     private int id;
     private String username;
     private String password;
+    private String image;
     private String email;
     private String fullName;
     private Role role;
@@ -47,6 +48,14 @@ public class Users {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     @Size(min = 5, max = 60, message = "Email.size")

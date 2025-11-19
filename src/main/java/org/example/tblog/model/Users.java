@@ -1,6 +1,7 @@
 package org.example.tblog.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import org.hibernate.annotations.CreationTimestamp;
@@ -18,7 +19,6 @@ public class Users {
     private Role role;
     private LocalDateTime createdAt;
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public int getId() {
@@ -29,8 +29,8 @@ public class Users {
         this.id = id;
     }
 
-    @Size(min = 5, max = 20, message = "Username.size")
-    @NotBlank(message = "Username.null")
+    @Size(min = 3, max = 20, message = "username.size")
+    @NotBlank(message = "username.null")
     public String getUsername() {
         return username;
     }
@@ -39,8 +39,8 @@ public class Users {
         this.username = username;
     }
 
-    @Size(max = 200, message = "Password.size")
-    @NotBlank(message = "Password.null")
+    @Size(min = 6, message = "password.size")
+    @NotBlank(message = "password.null")
     public String getPassword() {
         return password;
     }
@@ -49,8 +49,8 @@ public class Users {
         this.password = password;
     }
 
-    @Size(min = 5, max = 60, message = "Email.size")
-    @NotBlank(message = "Email.null")
+    @Email(message = "email.invalid")
+    @NotBlank(message = "email.null")
     public String getEmail() {
         return email;
     }
@@ -59,8 +59,8 @@ public class Users {
         this.email = email;
     }
 
-    @Size(min = 3, max = 60, message = "FullName.size")
-    @NotBlank(message = "FullName.null")
+    @Size(min = 2, max = 50, message = "fullname.size")
+    @NotBlank(message = "fullname.null")
     public String getFullName() {
         return fullName;
     }
@@ -70,6 +70,7 @@ public class Users {
     }
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     public Role getRole() {
         return role;
     }

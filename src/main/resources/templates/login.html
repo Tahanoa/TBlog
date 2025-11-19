@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl" xmlns:th="http://www.thymleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ورود | خلاقیت بی‌پایان</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1A1A2E',
+                        secondary: '#A855F7',
+                        accent: '#6D28D9',
+                        text: '#FFFFFF',
+                    },
+                    fontFamily: {
+                        'vazir': ['Vazirmatn', 'sans-serif'],
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'glow': 'glow 2s ease-in-out infinite alternate',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes glow {
+            from { box-shadow: 0 0 20px #A855F7; }
+            to { box-shadow: 0 0 30px #A855F7, 0 0 40px #6D28D9; }
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #1A1A2E 0%, #16213E 50%, #0F3460 100%);
+        }
+
+        .hero-pattern {
+            background-image: radial-gradient(circle at 25% 25%, #A855F7 0%, transparent 50%);
+        }
+    </style>
+</head>
+<body class="bg-primary text-text font-vazir">
+<!-- هدر -->
+<header class="fixed w-full z-50 bg-primary/80 backdrop-blur-lg border-b border-secondary/20">
+    <nav class="container mx-auto px-6 py-4">
+        <div class="flex justify-between items-center">
+            <div class="flex items-center space-x-2 space-x-reverse">
+                <div class="w-3 h-3 bg-secondary rounded-full animate-pulse"></div>
+                <span class="text-xl font-bold bg-gradient-to-l from-secondary to-accent bg-clip-text text-transparent">
+                        خلاقیت
+                    </span>
+            </div>
+
+            <div class="hidden md:flex space-x-8 space-x-reverse">
+                <a href="#" class="hover:text-secondary transition-all duration-300 font-medium">خانه</a>
+                <a href="#" class="hover:text-secondary transition-all duration-300 font-medium">مقالات</a>
+                <a href="#" class="hover:text-secondary transition-all duration-300 font-medium">درباره من</a>
+                <a href="#" class="hover:text-secondary transition-all duration-300 font-medium">تماس</a>
+            </div>
+
+            <div class="flex items-center space-x-4 space-x-reverse">
+                <a href="/register" class="text-gray-300 hover:text-secondary transition-all duration-300 font-medium">ثبت‌نام</a>
+                <button class="bg-secondary hover:bg-accent px-6 py-2 rounded-full transition-all duration-300 animate-glow">
+                    شروع کنید
+                </button>
+                <button class="md:hidden">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<!-- بخش ورود -->
+<section class="min-h-screen gradient-bg hero-pattern pt-20 flex items-center justify-center">
+    <div class="container mx-auto px-6 py-12">
+        <div class="max-w-md mx-auto">
+            <div class="text-center mb-10">
+                <h1 class="text-4xl font-bold mb-4">
+                    <span class="bg-gradient-to-l from-secondary to-accent bg-clip-text text-transparent">
+                        ورود به حساب
+                    </span>
+                </h1>
+                <p class="text-gray-300">برای دسترسی به محتوای ویژه وارد شوید</p>
+            </div>
+
+            <div class="bg-primary/50 backdrop-blur-lg border border-accent/30 rounded-3xl p-8 relative">
+                <div class="w-80 h-80 bg-gradient-to-br from-secondary to-accent rounded-full opacity-10 blur-3xl absolute -top-20 -right-20"></div>
+
+                <!-- فرم ورود اسپرینگ سکیوریتی -->
+                <form method="post" action="/login" class="space-y-6 relative z-10">
+                    <!-- CSRF توکن برای اسپرینگ سکیوریتی -->
+                    <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+
+                    <div>
+                        <label for="username" class="block text-gray-300 mb-2">نام کاربری یا ایمیل</label>
+                        <div class="relative">
+                            <input
+                                    type="text"
+                                    id="username"
+                                    name="username"
+                                    required
+                                    class="w-full bg-primary border border-accent/30 rounded-2xl px-4 py-3 pr-12 focus:outline-none focus:border-secondary transition-all duration-300"
+                                    placeholder="نام کاربری خود را وارد کنید"
+                            />
+                            <div class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
+                                <i class="fas fa-user"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="password" class="block text-gray-300 mb-2">رمز عبور</label>
+                        <div class="relative">
+                            <input
+                                    type="password"
+                                    id="password"
+                                    name="password"
+                                    required
+                                    class="w-full bg-primary border border-accent/30 rounded-2xl px-4 py-3 pr-12 focus:outline-none focus:border-secondary transition-all duration-300"
+                                    placeholder="رمز عبور خود را وارد کنید"
+                            />
+                            <div class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
+                                <i class="fas fa-lock"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center">
+                            <input
+                                    type="checkbox"
+                                    id="remember-me"
+                                    name="remember-me"
+                                    class="w-4 h-4 bg-primary border border-accent/30 rounded focus:ring-secondary focus:ring-opacity-25"
+                            />
+                            <label for="remember-me" class="mr-2 text-gray-300 text-sm">مرا به خاطر بسپار</label>
+                        </div>
+                        <a href="/forgot-password" class="text-secondary hover:text-accent text-sm transition-colors duration-300">فراموشی رمز عبور؟</a>
+                    </div>
+
+                    <!-- نمایش خطاهای احراز هویت -->
+                    <div th:if="${param.error}" class="bg-red-500/20 border border-red-500/50 rounded-2xl p-4 text-red-300 text-sm">
+                        <i class="fas fa-exclamation-triangle ml-2"></i>
+                        نام کاربری یا رمز عبور اشتباه است
+                    </div>
+
+                    <!-- نمایش پیام خروج -->
+                    <div th:if="${param.logout}" class="bg-green-500/20 border border-green-500/50 rounded-2xl p-4 text-green-300 text-sm">
+                        <i class="fas fa-check-circle ml-2"></i>
+                        شما با موفقیت خارج شدید
+                    </div>
+
+                    <button
+                            type="submit"
+                            class="w-full bg-secondary hover:bg-accent py-3 rounded-2xl font-bold transition-all duration-300 transform hover:scale-105 animate-glow"
+                    >
+                        ورود به حساب
+                        <i class="fas fa-arrow-left mr-2"></i>
+                    </button>
+                </form>
+
+                <div class="mt-6 pt-6 border-t border-accent/20">
+                    <p class="text-center text-gray-400 mb-4">یا با استفاده از</p>
+                    <div class="flex justify-center space-x-4 space-x-reverse">
+                        <button class="w-12 h-12 bg-primary border border-accent/30 rounded-2xl flex items-center justify-center hover:border-secondary hover:text-secondary transition-all duration-300">
+                            <i class="fab fa-google text-xl"></i>
+                        </button>
+                        <button class="w-12 h-12 bg-primary border border-accent/30 rounded-2xl flex items-center justify-center hover:border-secondary hover:text-secondary transition-all duration-300">
+                            <i class="fab fa-github text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="mt-6 text-center">
+                    <p class="text-gray-400">
+                        حساب کاربری ندارید؟
+                        <a href="/register" class="text-secondary hover:text-accent font-medium transition-colors duration-300">ثبت‌نام کنید</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- فوتر -->
+<footer class="bg-primary border-t border-accent/20 py-12">
+    <div class="container mx-auto px-6">
+        <div class="grid md:grid-cols-4 gap-8">
+            <div class="md:col-span-2">
+                <div class="flex items-center space-x-2 space-x-reverse mb-6">
+                    <div class="w-3 h-3 bg-secondary rounded-full animate-pulse"></div>
+                    <span class="text-xl font-bold bg-gradient-to-l from-secondary to-accent bg-clip-text text-transparent">
+                            خلاقیت
+                        </span>
+                </div>
+                <p class="text-gray-400 leading-relaxed mb-6">
+                    ما به اشتراک گذاری دانش و الهام بخشیدن به نوآوری اعتقاد داریم. همراه ما در این سفر خلاقانه باشید.
+                </p>
+                <div class="flex space-x-4 space-x-reverse">
+                    <a href="#" class="w-12 h-12 bg-primary border border-accent/30 rounded-2xl flex items-center justify-center hover:border-secondary hover:text-secondary transition-all duration-300">
+                        <i class="fab fa-telegram text-xl"></i>
+                    </a>
+                    <a href="#" class="w-12 h-12 bg-primary border border-accent/30 rounded-2xl flex items-center justify-center hover:border-secondary hover:text-secondary transition-all duration-300">
+                        <i class="fab fa-twitter text-xl"></i>
+                    </a>
+                    <a href="#" class="w-12 h-12 bg-primary border border-accent/30 rounded-2xl flex items-center justify-center hover:border-secondary hover:text-secondary transition-all duration-300">
+                        <i class="fab fa-instagram text-xl"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div>
+                <h3 class="text-lg font-bold mb-6">لینک‌های سریع</h3>
+                <ul class="space-y-3">
+                    <li><a href="#" class="text-gray-400 hover:text-secondary transition-colors duration-300">خانه</a></li>
+                    <li><a href="#" class="text-gray-400 hover:text-secondary transition-colors duration-300">مقالات</a></li>
+                    <li><a href="#" class="text-gray-400 hover:text-secondary transition-colors duration-300">درباره ما</a></li>
+                    <li><a href="#" class="text-gray-400 hover:text-secondary transition-colors duration-300">تماس</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h3 class="text-lg font-bold mb-6">اشتراک‌گذاری</h3>
+                <p class="text-gray-400 mb-4">در خبرنامه ما عضو شوید</p>
+                <div class="flex">
+                    <input type="email" placeholder="ایمیل شما" class="bg-primary border border-accent/30 rounded-r-2xl px-4 py-3 w-full focus:outline-none focus:border-secondary">
+                    <button class="bg-secondary hover:bg-accent px-6 rounded-l-2xl transition-all duration-300">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="border-t border-accent/20 mt-12 pt-8 text-center text-gray-400">
+            <p>© ۲۰۲۴ کلیه حقوق محفوظ است. ساخته شده با ❤️ و خلاقیت</p>
+        </div>
+    </div>
+</footer>
+</body>
+</html>

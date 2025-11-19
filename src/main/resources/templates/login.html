@@ -6,6 +6,7 @@
     <title>ورود | خلاقیت بی‌پایان</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="/login.css" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
@@ -54,30 +55,41 @@
     </style>
 </head>
 <body class="bg-primary text-text font-vazir">
-<!-- هدر -->
-<header class="fixed w-full z-50 bg-primary/80 backdrop-blur-lg border-b border-secondary/20">
+<!-- هدر بهبود یافته -->
+<header class="fixed w-full z-50 bg-primary/90 backdrop-blur-xl border-b border-secondary/20">
     <nav class="container mx-auto px-6 py-4">
         <div class="flex justify-between items-center">
-            <div class="flex items-center space-x-2 space-x-reverse">
-                <div class="w-3 h-3 bg-secondary rounded-full animate-pulse"></div>
-                <span class="text-xl font-bold bg-gradient-to-l from-secondary to-accent bg-clip-text text-transparent">
-                        خلاقیت
-                    </span>
+            <div class="flex items-center space-x-3 space-x-reverse">
+                <div class="flex items-center space-x-3 space-x-reverse">
+                    <img src="/Copilot_20251112_224409.png" alt="لوگو ایده‌پرداز" class="logo w-16 h-16">
+                </div>
             </div>
 
-            <div class="hidden md:flex space-x-8 space-x-reverse">
-                <a href="#" class="hover:text-secondary transition-all duration-300 font-medium">خانه</a>
-                <a href="#" class="hover:text-secondary transition-all duration-300 font-medium">مقالات</a>
-                <a href="#" class="hover:text-secondary transition-all duration-300 font-medium">درباره من</a>
-                <a href="#" class="hover:text-secondary transition-all duration-300 font-medium">تماس</a>
+            <div class="hidden md:flex space-x-10 space-x-reverse">
+                <a href="#" class="relative group font-medium">
+                    <span class="text-text hover:text-secondary transition-colors duration-300">خانه</span>
+                    <span class="absolute -bottom-2 right-0 w-0 h-0.5 bg-secondary group-hover:w-full transition-all duration-300"></span>
+                </a>
+                <a href="#" class="relative group font-medium">
+                    <span class="text-text hover:text-secondary transition-colors duration-300">مقالات</span>
+                    <span class="absolute -bottom-2 right-0 w-0 h-0.5 bg-secondary group-hover:w-full transition-all duration-300"></span>
+                </a>
+                <a href="#" class="relative group font-medium">
+                    <span class="text-text hover:text-secondary transition-colors duration-300">درباره من</span>
+                    <span class="absolute -bottom-2 right-0 w-0 h-0.5 bg-secondary group-hover:w-full transition-all duration-300"></span>
+                </a>
+                <a href="#" class="relative group font-medium">
+                    <span class="text-text hover:text-secondary transition-colors duration-300">تماس</span>
+                    <span class="absolute -bottom-2 right-0 w-0 h-0.5 bg-secondary group-hover:w-full transition-all duration-300"></span>
+                </a>
             </div>
 
             <div class="flex items-center space-x-4 space-x-reverse">
-                <a href="/register" class="text-gray-300 hover:text-secondary transition-all duration-300 font-medium">ثبت‌نام</a>
-                <button class="bg-secondary hover:bg-accent px-6 py-2 rounded-full transition-all duration-300 animate-glow">
-                    شروع کنید
+                <button class="relative overflow-hidden bg-gradient-to-l from-secondary to-accent hover:from-accent hover:to-secondary px-8 py-3 rounded-2xl font-bold transition-all duration-300 transform hover:scale-105 group">
+                    <span class="relative z-10">شروع کنید</span>
+                    <div class="absolute inset-0 bg-gradient-to-r from-secondary to-accent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </button>
-                <button class="md:hidden">
+                <button class="md:hidden p-2 border border-secondary/30 rounded-xl hover:border-secondary transition-colors duration-300">
                     <i class="fas fa-bars text-xl"></i>
                 </button>
             </div>
@@ -197,57 +209,88 @@
     </div>
 </section>
 
-<!-- فوتر -->
-<footer class="bg-primary border-t border-accent/20 py-12">
-    <div class="container mx-auto px-6">
-        <div class="grid md:grid-cols-4 gap-8">
-            <div class="md:col-span-2">
-                <div class="flex items-center space-x-2 space-x-reverse mb-6">
-                    <div class="w-3 h-3 bg-secondary rounded-full animate-pulse"></div>
-                    <span class="text-xl font-bold bg-gradient-to-l from-secondary to-accent bg-clip-text text-transparent">
-                            خلاقیت
-                        </span>
+<!-- فوتر بهبود یافته -->
+<footer class="bg-dark border-t border-accent/20 py-16 relative overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-t from-primary to-transparent opacity-50"></div>
+    <div class="container mx-auto px-6 relative z-10">
+        <div class="grid lg:grid-cols-4 md:grid-cols-2 gap-10 mb-12">
+            <div class="lg:col-span-2">
+                <!-- لوگو در فوتر -->
+                <div class="flex items-center space-x-3 space-x-reverse mb-6">
+                    <img src="/Copilot_20251112_224409.png" alt="لوگو ایده‌پرداز" class="logo w-12 h-12">
                 </div>
-                <p class="text-gray-400 leading-relaxed mb-6">
-                    ما به اشتراک گذاری دانش و الهام بخشیدن به نوآوری اعتقاد داریم. همراه ما در این سفر خلاقانه باشید.
+                <p class="text-gray-400 leading-relaxed mb-8 text-lg max-w-md">
+                    ما به اشتراک گذاری دانش و الهام بخشیدن به نوآوری اعتقاد داریم. همراه ما در این سفر خلاقانه باشید تا دنیای جدیدی از ایده‌ها را کشف کنید.
                 </p>
                 <div class="flex space-x-4 space-x-reverse">
-                    <a href="#" class="w-12 h-12 bg-primary border border-accent/30 rounded-2xl flex items-center justify-center hover:border-secondary hover:text-secondary transition-all duration-300">
-                        <i class="fab fa-telegram text-xl"></i>
+                    <a href="#" class="w-14 h-14 bg-dark border border-accent/30 rounded-2xl flex items-center justify-center hover:border-secondary hover:text-secondary hover:scale-110 transition-all duration-300 group">
+                        <i class="fab fa-telegram text-2xl group-hover:scale-110 transition-transform duration-300"></i>
                     </a>
-                    <a href="#" class="w-12 h-12 bg-primary border border-accent/30 rounded-2xl flex items-center justify-center hover:border-secondary hover:text-secondary transition-all duration-300">
-                        <i class="fab fa-twitter text-xl"></i>
+                    <a href="#" class="w-14 h-14 bg-dark border border-accent/30 rounded-2xl flex items-center justify-center hover:border-secondary hover:text-secondary hover:scale-110 transition-all duration-300 group">
+                        <i class="fab fa-twitter text-2xl group-hover:scale-110 transition-transform duration-300"></i>
                     </a>
-                    <a href="#" class="w-12 h-12 bg-primary border border-accent/30 rounded-2xl flex items-center justify-center hover:border-secondary hover:text-secondary transition-all duration-300">
-                        <i class="fab fa-instagram text-xl"></i>
+                    <a href="#" class="w-14 h-14 bg-dark border border-accent/30 rounded-2xl flex items-center justify-center hover:border-secondary hover:text-secondary hover:scale-110 transition-all duration-300 group">
+                        <i class="fab fa-instagram text-2xl group-hover:scale-110 transition-transform duration-300"></i>
+                    </a>
+                    <a href="#" class="w-14 h-14 bg-dark border border-accent/30 rounded-2xl flex items-center justify-center hover:border-secondary hover:text-secondary hover:scale-110 transition-all duration-300 group">
+                        <i class="fab fa-linkedin text-2xl group-hover:scale-110 transition-transform duration-300"></i>
                     </a>
                 </div>
             </div>
 
             <div>
-                <h3 class="text-lg font-bold mb-6">لینک‌های سریع</h3>
-                <ul class="space-y-3">
-                    <li><a href="#" class="text-gray-400 hover:text-secondary transition-colors duration-300">خانه</a></li>
-                    <li><a href="#" class="text-gray-400 hover:text-secondary transition-colors duration-300">مقالات</a></li>
-                    <li><a href="#" class="text-gray-400 hover:text-secondary transition-colors duration-300">درباره ما</a></li>
-                    <li><a href="#" class="text-gray-400 hover:text-secondary transition-colors duration-300">تماس</a></li>
+                <h3 class="text-xl font-bold mb-8 text-gradient">لینک‌های سریع</h3>
+                <ul class="space-y-4">
+                    <li>
+                        <a href="#" class="text-gray-400 hover:text-secondary transition-all duration-300 group flex items-center">
+                            <i class="fas fa-arrow-left ml-2 opacity-0 group-hover:opacity-100 transition-all duration-300"></i>
+                            خانه
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="text-gray-400 hover:text-secondary transition-all duration-300 group flex items-center">
+                            <i class="fas fa-arrow-left ml-2 opacity-0 group-hover:opacity-100 transition-all duration-300"></i>
+                            مقالات
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="text-gray-400 hover:text-secondary transition-all duration-300 group flex items-center">
+                            <i class="fas fa-arrow-left ml-2 opacity-0 group-hover:opacity-100 transition-all duration-300"></i>
+                            درباره ما
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="text-gray-400 hover:text-secondary transition-all duration-300 group flex items-center">
+                            <i class="fas fa-arrow-left ml-2 opacity-0 group-hover:opacity-100 transition-all duration-300"></i>
+                            تماس با ما
+                        </a>
+                    </li>
                 </ul>
             </div>
 
             <div>
-                <h3 class="text-lg font-bold mb-6">اشتراک‌گذاری</h3>
-                <p class="text-gray-400 mb-4">در خبرنامه ما عضو شوید</p>
-                <div class="flex">
-                    <input type="email" placeholder="ایمیل شما" class="bg-primary border border-accent/30 rounded-r-2xl px-4 py-3 w-full focus:outline-none focus:border-secondary">
-                    <button class="bg-secondary hover:bg-accent px-6 rounded-l-2xl transition-all duration-300">
-                        <i class="fas fa-paper-plane"></i>
+                <h3 class="text-xl font-bold mb-8 text-gradient">خبرنامه</h3>
+                <p class="text-gray-400 mb-6">در خبرنامه ما عضو شوید و از آخرین مطالب باخبر شوید</p>
+                <div class="flex group">
+                    <input type="email" placeholder="آدرس ایمیل شما" class="bg-dark border border-accent/30 rounded-r-2xl px-5 py-4 w-full focus:outline-none focus:border-secondary transition-all duration-300 text-text">
+                    <button class="bg-gradient-to-l from-secondary to-accent hover:from-accent hover:to-secondary px-8 rounded-l-2xl transition-all duration-300 transform group-hover:scale-105">
+                        <i class="fas fa-paper-plane text-xl"></i>
                     </button>
                 </div>
+                <p class="text-gray-500 text-sm mt-4">ما هرگز ایمیل شما را با کسی به اشتراک نمی‌گذاریم</p>
             </div>
         </div>
 
-        <div class="border-t border-accent/20 mt-12 pt-8 text-center text-gray-400">
-            <p>© ۲۰۲۴ کلیه حقوق محفوظ است. ساخته شده با ❤️ و خلاقیت</p>
+        <div class="border-t border-accent/20 pt-8 text-center text-gray-500">
+            <!-- لوگو در کپی رایت -->
+            <div class="flex justify-center items-center mb-4 space-x-2 space-x-reverse">
+                <img src="/Copilot_20251112_224409.png" alt="لوگو ایده‌پرداز" class="logo w-6 h-6">
+                <p class="text-lg">
+                    © ۲۰۲۴ کلیه حقوق محفوظ است. ساخته شده با
+                    <i class="fas fa-heart text-red-500 mx-1 animate-pulse"></i>
+                    و خلاقیت بی‌پایان
+                </p>
+            </div>
         </div>
     </div>
 </footer>

@@ -13,6 +13,7 @@ public class Comment {
     private int id;
     private Post post;
     private Users user;
+    private CommentsStatus status;
     private String content;
     private LocalDateTime time;
 
@@ -42,6 +43,15 @@ public class Comment {
 
     public void setUser(Users user) {
         this.user = user;
+    }
+
+    @Enumerated(EnumType.STRING)
+    public CommentsStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(CommentsStatus status) {
+        this.status = status;
     }
 
     @NotBlank(message = "comment.content.null")

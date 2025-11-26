@@ -14,4 +14,6 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
     Page<Post> findByContentContainingIgnoreCase(String content , Pageable pageable);
 
     Page<Post> findByCategoryId(Integer categoryId, Pageable pageable);
+
+
 }

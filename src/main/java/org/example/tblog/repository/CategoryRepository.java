@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 
 public interface CategoryRepository extends JpaRepository<Category, Integer> {
-
     Page<Category> findByNameContainingIgnoreCase(String name , Pageable pageable);
-
+    Category findByPostId(Integer postsId);
 }

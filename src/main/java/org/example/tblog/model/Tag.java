@@ -5,7 +5,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 @Entity
-@Table(name = "tags")
 public class Tag {
     private int id;
     private Post post;
@@ -31,8 +30,6 @@ public class Tag {
         this.post = post;
     }
 
-    @NotBlank(message = "tag.name.null")
-    @Size(min = 2, max = 30, message = "tag.name.size")
     public String getName() {
         return name;
     }
@@ -41,8 +38,6 @@ public class Tag {
         this.name = name;
     }
 
-    @NotBlank(message = "tag.slug.null")
-    @Size(min = 2, max = 40, message = "tag.slug.size")
     public String getSlug() {
         return slug;
     }

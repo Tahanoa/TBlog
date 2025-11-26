@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "posts")
 public class Post {
     private int id;
     private String title;
@@ -30,8 +29,6 @@ public class Post {
         this.id = id;
     }
 
-    @Size(min = 3, max = 100, message = "title.size")
-    @NotBlank(message = "title.null")
     public String getTitle() {
         return title;
     }
@@ -40,8 +37,6 @@ public class Post {
         this.title = title;
     }
 
-    @Size(min = 10, max = 5000, message = "content.size")
-    @NotBlank(message = "content.null")
     public String getContent() {
         return content;
     }

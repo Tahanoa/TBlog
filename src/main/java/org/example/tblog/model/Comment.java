@@ -8,7 +8,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "comments")
 public class Comment {
     private int id;
     private Post post;
@@ -54,8 +53,6 @@ public class Comment {
         this.status = status;
     }
 
-    @NotBlank(message = "comment.content.null")
-    @Size(min = 1, max = 500, message = "comment.content.size")
     public String getContent() {
         return content;
     }

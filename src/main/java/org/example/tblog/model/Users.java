@@ -9,7 +9,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "users_blog")
 public class Users {
     private int id;
     private String username;
@@ -29,8 +28,6 @@ public class Users {
         this.id = id;
     }
 
-    @Size(min = 3, max = 20, message = "username.size")
-    @NotBlank(message = "username.null")
     public String getUsername() {
         return username;
     }
@@ -39,8 +36,6 @@ public class Users {
         this.username = username;
     }
 
-    @Size(min = 6, message = "password.size")
-    @NotBlank(message = "password.null")
     public String getPassword() {
         return password;
     }
@@ -49,8 +44,6 @@ public class Users {
         this.password = password;
     }
 
-    @Email(message = "email.invalid")
-    @NotBlank(message = "email.null")
     public String getEmail() {
         return email;
     }
@@ -59,8 +52,6 @@ public class Users {
         this.email = email;
     }
 
-    @Size(min = 2, max = 50, message = "fullname.size")
-    @NotBlank(message = "fullname.null")
     public String getFullName() {
         return fullName;
     }

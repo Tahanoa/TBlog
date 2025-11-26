@@ -7,11 +7,11 @@ import jakarta.validation.constraints.Size;
 import java.util.List;
 
 @Entity
-@Table(name = "categories")
 public class Category {
     private int id;
-    private List<Post> posts;
     private String name;
+    private List<Category> categories;
+    private Post post;
     private String description;
     private String image;
     private String slug;
@@ -26,17 +26,6 @@ public class Category {
         this.id = id;
     }
 
-    @OneToMany
-    public List<Post> getPosts() {
-        return posts;
-    }
-
-    public void setPosts(List<Post> posts) {
-        this.posts = posts;
-    }
-
-    @NotBlank(message = "category.name.null")
-    @Size(min = 2, max = 50, message = "category.name.size")
     public String getName() {
         return name;
     }
@@ -45,9 +34,26 @@ public class Category {
         this.name = name;
     }
 
-    @Size(max = 200, message = "category.description.size")
+    @OneToMany
+    public List<Category> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(List<Category> categories) {
+        this.categories = categories;
+    }
+
     public String getDescription() {
         return description;
+    }
+
+    @ManyToOne
+    public Post getPost() {
+        return post;
+    }
+
+    public void setPost(Post post) {
+        this.post = post;
     }
 
     public void setDescription(String description) {
@@ -62,8 +68,6 @@ public class Category {
         this.image = image;
     }
 
-    @NotBlank(message = "category.slug.null")
-    @Size(min = 2, max = 60, message = "category.slug.size")
     public String getSlug() {
         return slug;
     }

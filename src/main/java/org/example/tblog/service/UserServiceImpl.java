@@ -51,4 +51,14 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         return userRepository.findById(id);
     }
 
+    @Override
+    public void deleteById(Integer id) {
+
+    }
+
+    @Override
+    public long count() {
+        return userRepository.count();
+    }
+
 }

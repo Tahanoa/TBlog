@@ -11,4 +11,8 @@ public interface UserService {
     User save(User user);
     Optional<User> findByUsername(String name);
     Optional<User> findById(int id);
+
+    void deleteById(Integer id);
+
+    long count();
 }

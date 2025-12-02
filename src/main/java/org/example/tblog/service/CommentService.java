@@ -14,4 +14,5 @@ public interface CommentService {
     void deleteById(int id);
     Page<Comment> findAll(Pageable pageable);
     Comment approveComment(int id);
+    long count();
 }

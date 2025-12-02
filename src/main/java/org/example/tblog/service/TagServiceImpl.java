@@ -44,4 +44,9 @@ public class TagServiceImpl implements TagService {
     public Tag findBySlug(String slug) {
         return tagRepository.findBySlug(slug);
     }
+
+    @Override
+    public long count() {
+        return tagRepository.count();
+    }
 }

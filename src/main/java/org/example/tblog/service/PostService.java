@@ -23,4 +23,6 @@ public interface PostService {
     void deleteById(int id);
 
     List<Post> findByTag(Tag tag);
+
+    long count();
 }

@@ -49,4 +49,9 @@ public class CommentServiceImpl implements CommentService {
         comment.setApproved(1);
         return commentRepository.save(comment);
     }
+
+    @Override
+    public long count() {
+        return commentRepository.count();
+    }
 }

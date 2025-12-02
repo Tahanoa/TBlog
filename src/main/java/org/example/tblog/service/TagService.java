@@ -13,4 +13,6 @@ public interface TagService {
     Tag save(Tag tag);
     void deleteById(int id);
     Tag findBySlug(String slug);
+
+    long count();
 }

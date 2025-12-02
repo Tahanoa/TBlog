@@ -53,4 +53,9 @@ public class PostServiceImpl implements PostService {
     public List<Post> findByTag(Tag tag){
         return postRepository.findAllByTagsContaining(tag);
     }
+
+    @Override
+    public long count() {
+        return postRepository.count();
+    }
 }

@@ -12,6 +12,7 @@ public class Post {
     private int id;
     private String title;
     private String slug;
+    private String imageUrl;
     private String content;
     private String excerpt;
     private Status status;
@@ -40,6 +41,14 @@ public class Post {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public String getSlug() {

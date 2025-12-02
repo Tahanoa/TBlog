@@ -60,6 +60,7 @@ public class PostController {
                 post.getTitle(),
                 post.getContent(),
                 post.getExcerpt(),
+                post.getImageUrl(),
                 post.getStatus(),
                 post.getPublishedAt(),
                 post.getViews(),
@@ -74,6 +75,7 @@ public class PostController {
         post.setTitle(dto.title());
         post.setContent(dto.content());
         post.setExcerpt(dto.excerpt());
+        post.setImageUrl(dto.imageUrl());
         post.setStatus(dto.status());
         post.setPublishedAt(dto.publishedAt());
 
@@ -175,6 +177,7 @@ public class PostController {
                     dto.setTitle(post.getTitle());
                     dto.setExcerpt(post.getExcerpt());
                     dto.setContent(post.getContent());
+                    dto.setImageUrl(post.getImageUrl());
                     dto.setSlug(post.getSlug());
                     dto.setPublishedAt(post.getPublishedAt());
                     dto.setViews(post.getViews());

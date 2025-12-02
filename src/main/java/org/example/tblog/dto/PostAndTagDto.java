@@ -9,6 +9,7 @@ public class PostAndTagDto {
     private int postId;
     private String title;
     private String excerpt;
+    private String imageUrl;
     private Status status;
     private LocalDateTime publishedAt;
     private int views;
@@ -32,6 +33,14 @@ public class PostAndTagDto {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public String getExcerpt() {

@@ -16,8 +16,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RequestMapping("/users")
 @Controller
@@ -37,8 +35,13 @@ public class UserController {
     @PostMapping("/register")
     public String register(@Valid RegisterDto registerDto) {
         if(!registerDto.password().equals(registerDto.rePassword())) {
-            return "redirect:/register?error=true";
+            return "redirect:/register?error=password_mismatch";
         }
+
+        if (userServiceImpl.findByUsername(registerDto.username()).isPresent()) {
+            return "redirect:/register?error=username_taken";
+        }
+
         User user = new User();
         user.setUsername(registerDto.username());
         user.setFullName(registerDto.fullName());
@@ -48,7 +51,7 @@ public class UserController {
 
         userServiceImpl.save(user);
 
-        return "login";
+        return "redirect:/login?success=true";
     }
 
     @GetMapping

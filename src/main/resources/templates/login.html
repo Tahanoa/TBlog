@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ورود به TBlog</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700&display=swap">
+  <link href="/loginStyle.css" rel="stylesheet">
+
+
+</head>
+
+<body>
+<div class="container">
+  <div class="login-wrapper">
+    <div class="login-container">
+      <div class="visual-section">
+        <div class="visual-content">
+          <h2>به TBlog خوش آمدید</h2>
+          <p>با ورود به حساب کاربری خود، به تمامی مقالات و آموزش‌های تخصصی دسترسی پیدا کنید و در جامعه‌ی فعال ما مشارکت نمایید.</p>
+        </div>
+      </div>
+
+      <div class="login-card">
+        <div class="logo-section">
+          <h1>TBlog</h1>
+          <p>بلاگ تخصصی فناوری و برنامه‌نویسی</p>
+        </div>
+
+        <div class="form-header">
+          <h2>ورود به حساب کاربری</h2>
+          <p>لطفاً اطلاعات حساب خود را وارد کنید</p>
+        </div>
+
+        <div th:if="${param.error}" class="error-message">
+          <i class="fas fa-exclamation-circle"></i>
+          <span>نام کاربری یا رمز عبور اشتباه است</span>
+        </div>
+
+        <div th:if="${param.success}" class="success-message">
+          <i class="fas fa-check-circle"></i>
+          <span>ثبت‌نام شما با موفقیت انجام شد. اکنون می‌توانید وارد شوید.</span>
+        </div>
+
+        <form th:action="@{/auth/login}" method="post" id="loginForm">
+          <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+          <div class="form-group">
+            <label class="form-label" for="username">نام کاربری یا ایمیل</label>
+            <input type="text" id="username" name="username" class="form-input"
+                   placeholder="نام کاربری یا ایمیل خود را وارد کنید" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="password">رمز عبور</label>
+            <div class="password-wrapper">
+              <input type="password" id="password" name="password" class="form-input"
+                     placeholder="رمز عبور خود را وارد کنید" required>
+              <button type="button" class="toggle-password" id="togglePassword">
+                <i class="far fa-eye"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="remember-forgot">
+            <div class="remember-me">
+              <input type="checkbox" id="rememberMe" name="remember-me">
+              <label for="rememberMe">مرا به خاطر بسپار</label>
+            </div>
+            <a th:href="@{/auth/forgot-password}" class="forgot-password">فراموشی رمز عبور؟</a>
+          </div>
+
+          <button type="submit" class="btn btn-primary">ورود به حساب</button>
+
+          <div class="register-link">
+            حساب کاربری ندارید؟ <a th:href="@{/users/register}">ثبت‌نام کنید</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const togglePassword = document.getElementById('togglePassword');
+  const passwordInput = document.getElementById('password');
+  const passwordIcon = togglePassword.querySelector('i');
+
+  togglePassword.addEventListener('click', function() {
+    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+    passwordInput.setAttribute('type', type);
+
+    if (type === 'password') {
+      passwordIcon.classList.remove('fa-eye-slash');
+      passwordIcon.classList.add('fa-eye');
+    } else {
+      passwordIcon.classList.remove('fa-eye');
+      passwordIcon.classList.add('fa-eye-slash');
+    }
+  });
+
+</script>
+</body>
+</html>

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ثبت‌نام در TBlog</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700&display=swap">
+    <link href="/rigesterStyle.css" rel="stylesheet">
+
+</head>
+<body>
+<div class="container">
+    <div class="register-wrapper">
+        <div class="register-card">
+            <div class="logo-section">
+                <h1>TBlog</h1>
+                <p>بلاگ تخصصی فناوری و برنامه‌نویسی</p>
+            </div>
+
+            <div class="form-header">
+                <h2>ایجاد حساب کاربری</h2>
+                <p>لطفاً اطلاعات خود را برای ثبت‌نام وارد کنید</p>
+            </div>
+
+            <!-- پیام خطا (در صورت وجود) -->
+            <div th:if="${param.error != null}" class="error-message">
+                <i class="fas fa-exclamation-circle"></i>
+                <span th:text="${param.error == 'password_mismatch'} ? 'گذرواژه‌ها همخوانی ندارند' :
+                               ${param.error == 'username_taken'} ? 'این نام کاربری قبلاً ثبت شده است' :
+                               ${param.error == 'email_taken'} ? 'این ایمیل قبلاً ثبت شده است' :
+                               'خطایی در ثبت‌نام رخ داده است'">
+                </span>
+            </div>
+
+            <!-- پیام موفقیت -->
+            <div th:if="${param.success != null}" class="success-message">
+                <i class="fas fa-check-circle"></i>
+                <span>ثبت‌نام شما با موفقیت انجام شد. اکنون می‌توانید وارد شوید.</span>
+            </div>
+
+            <form th:action="@{/users/register}" method="post" id="registerForm">
+                <!-- توکن CSRF -->
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="fullName">نام کامل</label>
+                        <input type="text" id="fullName" name="fullName" class="form-input"
+                               placeholder="نام و نام خانوادگی"
+                               th:value="${registerDto != null} ? ${registerDto.fullName} : ''"
+                               required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="username">نام کاربری</label>
+                        <input type="text" id="username" name="username" class="form-input"
+                               placeholder="نام کاربری مورد نظر"
+                               th:value="${registerDto != null} ? ${registerDto.username} : ''"
+                               required>
+                        <div class="strength-text" id="usernameAvailability"></div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="email">آدرس ایمیل</label>
+                    <input type="email" id="email" name="email" class="form-input"
+                           placeholder="example@domain.com"
+                           th:value="${registerDto != null} ? ${registerDto.email} : ''"
+                           required>
+                    <div class="strength-text" id="emailAvailability"></div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="password">رمز عبور</label>
+                        <div class="password-wrapper">
+                            <input type="password" id="password" name="password" class="form-input"
+                                   placeholder="رمز عبور قوی انتخاب کنید" required>
+                            <button type="button" class="toggle-password" id="togglePassword">
+                                <i class="far fa-eye"></i>
+                            </button>
+                        </div>
+                        <div class="password-strength">
+                            <div class="strength-bar" id="passwordStrengthBar"></div>
+                        </div>
+                        <div class="strength-text" id="passwordStrengthText">قدرت رمز عبور: ضعیف</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="rePassword">تکرار رمز عبور</label>
+                        <div class="password-wrapper">
+                            <input type="password" id="rePassword" name="rePassword" class="form-input"
+                                   placeholder="رمز عبور را تکرار کنید" required>
+                            <button type="button" class="toggle-password" id="toggleConfirmPassword">
+                                <i class="far fa-eye"></i>
+                            </button>
+                        </div>
+                        <div class="strength-text" id="passwordMatch"></div>
+                    </div>
+                </div>
+
+                <div class="terms-agreement">
+                    <input type="checkbox" id="agreeTerms" name="agreeTerms" required>
+                    <label for="agreeTerms">
+                        با ثبت‌نام در TBlog، با <a href="#">شرایط استفاده</a> و <a href="#">سیاست حریم خصوصی</a> موافقت می‌کنم.
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="submitButton">ایجاد حساب کاربری</button>
+
+                <div class="login-link">
+                    قبلاً حساب کاربری دارید؟ <a th:href="@{/auth/login}">وارد شوید</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function setupPasswordToggle(passwordId, toggleId) {
+        const togglePassword = document.getElementById(toggleId);
+        const passwordInput = document.getElementById(passwordId);
+        const passwordIcon = togglePassword.querySelector('i');
+
+        togglePassword.addEventListener('click', function() {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+
+            if (type === 'password') {
+                passwordIcon.classList.remove('fa-eye-slash');
+                passwordIcon.classList.add('fa-eye');
+            } else {
+                passwordIcon.classList.remove('fa-eye');
+                passwordIcon.classList.add('fa-eye-slash');
+            }
+        });
+    }
+
+    setupPasswordToggle('password', 'togglePassword');
+    setupPasswordToggle('rePassword', 'toggleConfirmPassword');
+
+    const passwordInput = document.getElementById('password');
+    const passwordStrengthBar = document.getElementById('passwordStrengthBar');
+    const passwordStrengthText = document.getElementById('passwordStrengthText');
+
+    passwordInput.addEventListener('input', function() {
+        const password = passwordInput.value;
+        let strength = 0;
+        let strengthText = 'ضعیف';
+        let strengthColor = '#ff4757'; // قرمز
+
+        if (password.length >= 8) strength += 25;
+
+        if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength += 25;
+
+        if (/\d/.test(password)) strength += 25;
+
+        if (/[^A-Za-z0-9]/.test(password)) strength += 25;
+
+        if (strength >= 75) {
+            strengthText = 'قوی';
+            strengthColor = '#2ed573'; // سبز
+        } else if (strength >= 50) {
+            strengthText = 'متوسط';
+            strengthColor = '#ffa502'; // نارنجی
+        } else if (strength >= 25) {
+            strengthText = 'ضعیف';
+            strengthColor = '#ff4757'; // قرمز
+        } else {
+            strengthText = 'خیلی ضعیف';
+            strengthColor = '#ff4757'; // قرمز
+        }
+
+        passwordStrengthBar.style.width = strength + '%';
+        passwordStrengthBar.style.backgroundColor = strengthColor;
+        passwordStrengthText.textContent = `قدرت رمز عبور: ${strengthText}`;
+        passwordStrengthText.style.color = strengthColor;
+    });
+
+    const confirmPasswordInput = document.getElementById('rePassword');
+    const passwordMatchText = document.getElementById('passwordMatch');
+
+    function checkPasswordMatch() {
+        const password = passwordInput.value;
+        const confirmPassword = confirmPasswordInput.value;
+
+        if (confirmPassword.length === 0) {
+            passwordMatchText.textContent = '';
+            passwordMatchText.style.color = '';
+            return;
+        }
+
+        if (password === confirmPassword) {
+            passwordMatchText.textContent = 'رمز عبور مطابقت دارد';
+            passwordMatchText.style.color = '#2ed573'; // سبز
+        } else {
+            passwordMatchText.textContent = 'رمز عبور مطابقت ندارد';
+            passwordMatchText.style.color = '#ff4757'; // قرمز
+        }
+    }
+
+    passwordInput.addEventListener('input', checkPasswordMatch);
+    confirmPasswordInput.addEventListener('input', checkPasswordMatch);
+
+    const registerForm = document.getElementById('registerForm');
+    const submitButton = document.getElementById('submitButton');
+
+    registerForm.addEventListener('submit', function(e) {
+        const password = document.getElementById('password').value;
+        const rePassword = document.getElementById('rePassword').value;
+        const agreeTerms = document.getElementById('agreeTerms').checked;
+
+        if (password !== rePassword) {
+            e.preventDefault();
+            alert('رمز عبور و تکرار آن مطابقت ندارند');
+            return;
+        }
+
+        if (!agreeTerms) {
+            e.preventDefault();
+            alert('لطفاً با شرایط استفاده موافقت کنید');
+            return;
+        }
+
+        submitButton.disabled = true;
+        submitButton.textContent = 'در حال ثبت‌نام...';
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+    });
+</script>
+</body>
+</html>

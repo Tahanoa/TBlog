@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/")
+@RequestMapping()
 public class PageController {
     private final PasswordEncoder passwordEncoder;
     private final PostService postService;
@@ -60,16 +60,17 @@ public class PageController {
         return "admin/comments";
     }
 
+    @GetMapping("/admin/dashboard")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String adminDashboard() {
+        return "admin/dashboard";
+    }
+
     @GetMapping("/admin/users")
     @PreAuthorize("hasRole('ADMIN')")
     public String adminUsers() {
         return "admin/users";
     }
 
-    @GetMapping("/admin/dashboard")
-    @PreAuthorize("hasRole('ADMIN')")
-    public String adminDashboard() {
-        return "admin/dashboard";
-    }
 
 }

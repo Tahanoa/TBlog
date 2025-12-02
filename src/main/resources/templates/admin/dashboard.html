@@ -1,0 +1,1767 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>داشبورد مدیریت - TBlog</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700&display=swap">
+  <meta name="_csrf" th:content="${_csrf.token}">
+  <meta name="_csrf_header" th:content="${_csrf.headerName}">
+  <style>
+    /* متغیرهای رنگ و فونت */
+    :root {
+      --primary-color: #7d27da;
+      --primary-dark: #5e1ca9;
+      --primary-light: #9a4eff;
+      --dark-bg: #121212;
+      --darker-bg: #0a0a0a;
+      --card-bg: #1e1e1e;
+      --text-primary: #f0f0f0;
+      --text-secondary: #b0b0b0;
+      --border-color: #333333;
+      --shadow-color: rgba(125, 39, 218, 0.2);
+      --success-color: #10b981;
+      --warning-color: #f59e0b;
+      --danger-color: #ef4444;
+      --info-color: #3b82f6;
+      --purple-light: #a855f7;
+      --blue-light: #60a5fa;
+      --green-light: #34d399;
+      --orange-light: #fb923c;
+    }
+
+    /* ریست و تنظیمات پایه */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Vazirmatn', sans-serif;
+      background-color: var(--dark-bg);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.3s;
+    }
+
+    ul {
+      list-style: none;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* هدر و ناوبری */
+    header {
+      background-color: rgba(10, 10, 10, 0.95);
+      padding: 15px 0;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+      border-bottom: 1px solid var(--border-color);
+      backdrop-filter: blur(10px);
+    }
+
+    .header-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .logo-text h1 {
+      font-size: 1.8rem;
+      background: linear-gradient(to right, var(--primary-color), var(--primary-light));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 5px;
+    }
+
+    .logo-text p {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .nav-menu ul {
+      display: flex;
+      gap: 30px;
+    }
+
+    .nav-menu a {
+      font-weight: 500;
+      padding: 8px 0;
+      position: relative;
+    }
+
+    .nav-menu a:hover {
+      color: var(--primary-light);
+    }
+
+    .nav-menu a::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 0;
+      height: 2px;
+      background-color: var(--primary-color);
+      transition: width 0.3s;
+    }
+
+    .nav-menu a:hover::after {
+      width: 100%;
+    }
+
+    .nav-buttons {
+      display: flex;
+      gap: 15px;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border-radius: 30px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s;
+      border: none;
+      font-family: 'Vazirmatn', sans-serif;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      background-color: var(--primary-color);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-dark);
+      box-shadow: 0 0 15px var(--shadow-color);
+    }
+
+    .btn-outline {
+      background-color: transparent;
+      color: var(--primary-color);
+      border: 1px solid var(--primary-color);
+    }
+
+    .btn-outline:hover {
+      background-color: var(--primary-color);
+      color: white;
+    }
+
+    .btn-success {
+      background-color: var(--success-color);
+      color: white;
+    }
+
+    .btn-success:hover {
+      background-color: #0da271;
+      box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
+    }
+
+    .btn-warning {
+      background-color: var(--warning-color);
+      color: white;
+    }
+
+    .btn-warning:hover {
+      background-color: #d97706;
+      box-shadow: 0 0 15px rgba(245, 158, 11, 0.2);
+    }
+
+    .btn-danger {
+      background-color: var(--danger-color);
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background-color: #dc2626;
+      box-shadow: 0 0 15px rgba(239, 68, 68, 0.2);
+    }
+
+    .btn-info {
+      background-color: var(--info-color);
+      color: white;
+    }
+
+    .btn-info:hover {
+      background-color: #2563eb;
+      box-shadow: 0 0 15px rgba(59, 130, 246, 0.2);
+    }
+
+    .btn-secondary {
+      background-color: var(--card-bg);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+    }
+
+    .btn-secondary:hover {
+      background-color: #2a2a2a;
+    }
+
+    .btn-sm {
+      padding: 6px 12px;
+      font-size: 0.85rem;
+    }
+
+    .mobile-menu-btn {
+      display: none;
+      font-size: 1.5rem;
+      background: none;
+      border: none;
+      color: var(--text-primary);
+      cursor: pointer;
+    }
+
+    /* صفحه داشبورد */
+    .dashboard {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      min-height: calc(100vh - 80px);
+    }
+
+    /* سایدبار */
+    .sidebar {
+      background-color: var(--darker-bg);
+      border-left: 1px solid var(--border-color);
+      padding: 30px 20px;
+      position: sticky;
+      top: 80px;
+      height: calc(100vh - 80px);
+      overflow-y: auto;
+    }
+
+    .sidebar-header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 40px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .admin-avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    .admin-info h3 {
+      font-size: 1.2rem;
+      margin-bottom: 5px;
+    }
+
+    .admin-info p {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    .nav-title {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin: 25px 0 15px;
+      font-weight: 500;
+    }
+
+    .sidebar-nav ul {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .sidebar-nav li a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      border-radius: 12px;
+      color: var(--text-secondary);
+      transition: all 0.3s;
+    }
+
+    .sidebar-nav li a:hover {
+      background-color: rgba(255, 255, 255, 0.05);
+      color: var(--text-primary);
+    }
+
+    .sidebar-nav li.active a {
+      background-color: var(--primary-color);
+      color: white;
+      box-shadow: 0 4px 12px var(--shadow-color);
+    }
+
+    .sidebar-nav li a i {
+      font-size: 1.2rem;
+      width: 24px;
+      text-align: center;
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      padding-top: 30px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    /* محتوای اصلی */
+    .main-content {
+      padding: 40px 30px;
+      overflow-y: auto;
+    }
+
+    .welcome-section {
+      margin-bottom: 40px;
+    }
+
+    .welcome-card {
+      background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
+      border-radius: 20px;
+      padding: 40px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .welcome-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -20%;
+      width: 60%;
+      height: 150%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+      z-index: 0;
+    }
+
+    .welcome-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .welcome-content h1 {
+      font-size: 2.5rem;
+      margin-bottom: 15px;
+    }
+
+    .welcome-content p {
+      font-size: 1.1rem;
+      color: rgba(255, 255, 255, 0.9);
+      max-width: 600px;
+      margin-bottom: 25px;
+    }
+
+    .welcome-stats {
+      display: flex;
+      gap: 30px;
+      flex-wrap: wrap;
+    }
+
+    .welcome-stat {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .welcome-stat i {
+      font-size: 1.5rem;
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .welcome-stat span {
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    /* آمار کلی */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 25px;
+      margin-bottom: 40px;
+    }
+
+    .stat-card {
+      background-color: var(--card-bg);
+      border-radius: 20px;
+      padding: 30px;
+      border: 1px solid var(--border-color);
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      border-color: var(--primary-color);
+    }
+
+    .stat-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 25px;
+    }
+
+    .stat-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+    }
+
+    .stat-icon.posts {
+      background: linear-gradient(135deg, var(--purple-light), var(--primary-color));
+      color: white;
+    }
+
+    .stat-icon.comments {
+      background: linear-gradient(135deg, var(--blue-light), var(--info-color));
+      color: white;
+    }
+
+    .stat-icon.users {
+      background: linear-gradient(135deg, var(--green-light), var(--success-color));
+      color: white;
+    }
+
+    .stat-icon.categories {
+      background: linear-gradient(135deg, var(--orange-light), var(--warning-color));
+      color: white;
+    }
+
+    .stat-trend {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      padding: 6px 12px;
+      border-radius: 20px;
+    }
+
+    .trend-up {
+      background-color: rgba(16, 185, 129, 0.2);
+      color: var(--success-color);
+    }
+
+    .trend-down {
+      background-color: rgba(239, 68, 68, 0.2);
+      color: var(--danger-color);
+    }
+
+    .stat-value {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      background: linear-gradient(to right, var(--text-primary), var(--primary-light));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .stat-label {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+    }
+
+    .stat-progress {
+      height: 6px;
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 3px;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 1s ease-in-out;
+    }
+
+    .progress-bar.posts {
+      background: linear-gradient(to right, var(--purple-light), var(--primary-color));
+    }
+
+    .progress-bar.comments {
+      background: linear-gradient(to right, var(--blue-light), var(--info-color));
+    }
+
+    .progress-bar.users {
+      background: linear-gradient(to right, var(--green-light), var(--success-color));
+    }
+
+    .progress-bar.categories {
+      background: linear-gradient(to right, var(--orange-light), var(--warning-color));
+    }
+
+    .stat-percentage {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      text-align: left;
+    }
+
+    /* نمودارها و گزارشات */
+    .charts-section {
+      margin-bottom: 40px;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .section-header h2 {
+      font-size: 1.8rem;
+      position: relative;
+      padding-bottom: 10px;
+    }
+
+    .section-header h2::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 80px;
+      height: 3px;
+      background: linear-gradient(to right, var(--primary-color), transparent);
+    }
+
+    .time-filter {
+      display: flex;
+      gap: 10px;
+    }
+
+    .time-filter button {
+      padding: 8px 16px;
+      border-radius: 8px;
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .time-filter button:hover {
+      color: var(--text-primary);
+    }
+
+    .time-filter button.active {
+      background-color: var(--primary-color);
+      border-color: var(--primary-color);
+      color: white;
+    }
+
+    .charts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+      gap: 25px;
+    }
+
+    .chart-card {
+      background-color: var(--card-bg);
+      border-radius: 20px;
+      padding: 30px;
+      border: 1px solid var(--border-color);
+    }
+
+    .chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+
+    .chart-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+    }
+
+    .chart-container {
+      height: 300px;
+      position: relative;
+    }
+
+    /* آخرین فعالیت‌ها */
+    .activity-section {
+      margin-bottom: 40px;
+    }
+
+    .activity-timeline {
+      background-color: var(--card-bg);
+      border-radius: 20px;
+      padding: 30px;
+      border: 1px solid var(--border-color);
+    }
+
+    .activity-list {
+      position: relative;
+      padding-right: 30px;
+    }
+
+    .activity-list::before {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background-color: var(--border-color);
+    }
+
+    .activity-item {
+      position: relative;
+      margin-bottom: 30px;
+      padding-right: 40px;
+    }
+
+    .activity-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .activity-item::before {
+      content: '';
+      position: absolute;
+      right: -6px;
+      top: 5px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background-color: var(--primary-color);
+      border: 3px solid var(--card-bg);
+      z-index: 1;
+    }
+
+    .activity-time {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+
+    .activity-content {
+      background-color: rgba(255, 255, 255, 0.05);
+      padding: 20px;
+      border-radius: 12px;
+      border-right: 3px solid var(--primary-color);
+    }
+
+    .activity-content h4 {
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .activity-content p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+
+    /* آخرین کامنت‌ها */
+    .recent-comments {
+      background-color: var(--card-bg);
+      border-radius: 20px;
+      padding: 30px;
+      border: 1px solid var(--border-color);
+    }
+
+    .comment-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .comment-item {
+      display: flex;
+      gap: 15px;
+      padding: 20px;
+      background-color: rgba(255, 255, 255, 0.03);
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      transition: all 0.3s;
+    }
+
+    .comment-item:hover {
+      border-color: var(--primary-color);
+      transform: translateX(-5px);
+    }
+
+    .comment-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      flex-shrink: 0;
+    }
+
+    .comment-content {
+      flex: 1;
+    }
+
+    .comment-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 10px;
+    }
+
+    .comment-author {
+      font-weight: 600;
+    }
+
+    .comment-time {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    .comment-text {
+      color: var(--text-secondary);
+      margin-bottom: 10px;
+      line-height: 1.5;
+    }
+
+    .comment-post {
+      font-size: 0.9rem;
+      color: var(--primary-light);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    /* فوتر */
+    footer {
+      background-color: var(--darker-bg);
+      padding: 40px 0 20px;
+      border-top: 1px solid var(--border-color);
+      margin-top: 60px;
+    }
+
+    .footer-content {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 40px;
+      margin-bottom: 30px;
+    }
+
+    .footer-about p {
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+
+    .social-links {
+      display: flex;
+      gap: 15px;
+    }
+
+    .social-link {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: var(--card-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+    }
+
+    .social-link:hover {
+      background-color: var(--primary-color);
+      transform: translateY(-3px);
+    }
+
+    .footer-links h3 {
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+      position: relative;
+      padding-bottom: 10px;
+    }
+
+    .footer-links h3::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 40px;
+      height: 2px;
+      background-color: var(--primary-color);
+    }
+
+    .footer-links ul li {
+      margin-bottom: 12px;
+    }
+
+    .footer-links a {
+      color: var(--text-secondary);
+    }
+
+    .footer-links a:hover {
+      color: var(--primary-light);
+      padding-right: 5px;
+    }
+
+    .copyright {
+      text-align: center;
+      padding-top: 20px;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    /* رسپانسیو */
+    @media (max-width: 1200px) {
+      .container {
+        max-width: 100%;
+        padding: 0 15px;
+      }
+
+      .charts-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .chart-card {
+        min-width: 100%;
+      }
+    }
+
+    @media (max-width: 992px) {
+      .dashboard {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        display: none;
+        position: fixed;
+        top: 80px;
+        right: 0;
+        width: 280px;
+        height: calc(100vh - 80px);
+        z-index: 1000;
+        box-shadow: -5px 0 20px rgba(0, 0, 0, 0.5);
+      }
+
+      .sidebar.active {
+        display: block;
+      }
+
+      .main-content {
+        padding: 30px 20px;
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .welcome-card {
+        padding: 30px 20px;
+      }
+
+      .welcome-content h1 {
+        font-size: 2rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .nav-menu {
+        display: none;
+        position: absolute;
+        top: 100%;
+        right: 0;
+        width: 100%;
+        background-color: var(--darker-bg);
+        padding: 20px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+        border-top: 1px solid var(--border-color);
+      }
+
+      .nav-menu.active {
+        display: block;
+      }
+
+      .nav-menu ul {
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .mobile-menu-btn {
+        display: block;
+      }
+
+      .nav-buttons {
+        display: none;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .welcome-stats {
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .time-filter {
+        flex-wrap: wrap;
+      }
+
+      .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .welcome-content h1 {
+        font-size: 1.7rem;
+      }
+
+      .stat-value {
+        font-size: 2rem;
+      }
+
+      .chart-card {
+        padding: 20px;
+      }
+
+      .activity-item {
+        padding-right: 30px;
+      }
+
+      .comment-item {
+        flex-direction: column;
+      }
+
+      .footer-content {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+<!-- هدر و ناوبری -->
+<header>
+  <div class="container header-container">
+    <div class="logo-container">
+      <div class="logo-text">
+        <h1>TBlog</h1>
+        <p>داشبورد مدیریت</p>
+      </div>
+    </div>
+
+    <nav class="nav-menu">
+      <ul>
+        <li><a href="/">مشاهده سایت</a></li>
+        <li><a href="/dashboard" class="active">داشبورد</a></li>
+        <li><a href="/posts">مقالات</a></li>
+      </ul>
+    </nav>
+
+    <div class="nav-buttons">
+      <a href="/posts" class="btn btn-outline">مشاهده مقالات</a>
+      <a href="/logout" class="btn btn-primary">خروج</a>
+    </div>
+
+    <button class="mobile-menu-btn" id="mobileMenuBtn">
+      <i class="fas fa-bars"></i>
+    </button>
+  </div>
+</header>
+
+<!-- صفحه داشبورد -->
+<div class="dashboard">
+  <!-- سایدبار -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="admin-avatar">A</div>
+      <div class="admin-info">
+        <h3>مدیر سیستم</h3>
+        <p>سطح دسترسی: ادمین</p>
+      </div>
+    </div>
+
+    <div class="nav-title">منوی اصلی</div>
+    <nav class="sidebar-nav">
+      <ul>
+        <li class="active">
+          <a href="/dashboard">
+            <i class="fas fa-tachometer-alt"></i>
+            <span>داشبورد</span>
+          </a>
+        </li>
+        <li>
+          <a href="/posts/admin">
+            <i class="fas fa-newspaper"></i>
+            <span>مدیریت پست‌ها</span>
+          </a>
+        </li>
+        <li>
+          <a href="/categories-tags">
+            <i class="fas fa-tags"></i>
+            <span>دسته‌بندی و برچسب</span>
+          </a>
+        </li>
+        <li>
+          <a href="/comments/admin">
+            <i class="fas fa-comments"></i>
+            <span>مدیریت کامنت‌ها</span>
+          </a>
+        </li>
+        <li>
+          <a href="/users/admin">
+            <i class="fas fa-users"></i>
+            <span>مدیریت کاربران</span>
+          </a>
+        </li>
+        <li>
+          <a href="/analytics">
+            <i class="fas fa-chart-line"></i>
+            <span>آمار و آنالیز</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="nav-title">تنظیمات</div>
+    <nav class="sidebar-nav">
+      <ul>
+        <li>
+          <a href="/settings">
+            <i class="fas fa-cog"></i>
+            <span>تنظیمات سایت</span>
+          </a>
+        </li>
+        <li>
+          <a href="/profile">
+            <i class="fas fa-user-cog"></i>
+            <span>پروفایل من</span>
+          </a>
+        </li>
+        <li>
+          <a href="/help">
+            <i class="fas fa-question-circle"></i>
+            <span>راهنما</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="nav-title">وضعیت سیستم</div>
+      <div style="margin-top: 15px;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+          <span style="color: var(--text-secondary); font-size: 0.9rem;">حافظه سرور</span>
+          <span style="color: var(--success-color); font-weight: 500;">68%</span>
+        </div>
+        <div style="height: 6px; background-color: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden;">
+          <div style="width: 68%; height: 100%; background: linear-gradient(to right, var(--success-color), var(--green-light)); border-radius: 3px;"></div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- محتوای اصلی -->
+  <main class="main-content">
+    <!-- بخش خوش‌آمدگویی -->
+    <section class="welcome-section">
+      <div class="welcome-card">
+        <div class="welcome-content">
+          <h1>سلام مدیر محترم! 👋</h1>
+          <p>به پنل مدیریت TBlog خوش آمدید. در این بخش می‌توانید تمامی فعالیت‌های سایت را مدیریت و نظارت کنید.</p>
+          <div class="welcome-stats">
+            <div class="welcome-stat">
+              <i class="fas fa-calendar-day"></i>
+              <span id="current-date">--/--/----</span>
+            </div>
+            <div class="welcome-stat">
+              <i class="fas fa-clock"></i>
+              <span id="current-time">--:--</span>
+            </div>
+            <div class="welcome-stat">
+              <i class="fas fa-signal"></i>
+              <span>آنلاین: <span id="online-users">12</span> کاربر</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- آمار کلی -->
+    <section class="stats-section">
+      <div class="stats-grid">
+        <!-- کارت پست‌ها -->
+        <div class="stat-card">
+          <div class="stat-header">
+            <div class="stat-icon posts">
+              <i class="fas fa-newspaper"></i>
+            </div>
+            <div class="stat-trend trend-up">
+              <i class="fas fa-arrow-up"></i>
+              <span>12%</span>
+            </div>
+          </div>
+          <div class="stat-value" id="total-posts">0</div>
+          <div class="stat-label">تعداد کل پست‌ها</div>
+          <div class="stat-progress">
+            <div class="progress-bar posts" id="posts-progress" style="width: 0%"></div>
+          </div>
+          <div class="stat-percentage" id="posts-percentage">0% افزایش نسبت به ماه گذشته</div>
+        </div>
+
+        <!-- کارت کامنت‌ها -->
+        <div class="stat-card">
+          <div class="stat-header">
+            <div class="stat-icon comments">
+              <i class="fas fa-comments"></i>
+            </div>
+            <div class="stat-trend trend-up">
+              <i class="fas fa-arrow-up"></i>
+              <span>24%</span>
+            </div>
+          </div>
+          <div class="stat-value" id="total-comments">0</div>
+          <div class="stat-label">تعداد کل کامنت‌ها</div>
+          <div class="stat-progress">
+            <div class="progress-bar comments" id="comments-progress" style="width: 0%"></div>
+          </div>
+          <div class="stat-percentage" id="comments-percentage">0% افزایش نسبت به ماه گذشته</div>
+        </div>
+
+        <!-- کارت کاربران -->
+        <div class="stat-card">
+          <div class="stat-header">
+            <div class="stat-icon users">
+              <i class="fas fa-users"></i>
+            </div>
+            <div class="stat-trend trend-up">
+              <i class="fas fa-arrow-up"></i>
+              <span>8%</span>
+            </div>
+          </div>
+          <div class="stat-value" id="total-users">0</div>
+          <div class="stat-label">تعداد کاربران</div>
+          <div class="stat-progress">
+            <div class="progress-bar users" id="users-progress" style="width: 0%"></div>
+          </div>
+          <div class="stat-percentage" id="users-percentage">0% افزایش نسبت به ماه گذشته</div>
+        </div>
+
+        <!-- کارت دسته‌بندی‌ها -->
+        <div class="stat-card">
+          <div class="stat-header">
+            <div class="stat-icon categories">
+              <i class="fas fa-folder"></i>
+            </div>
+            <div class="stat-trend trend-down">
+              <i class="fas fa-arrow-down"></i>
+              <span>3%</span>
+            </div>
+          </div>
+          <div class="stat-value" id="total-categories">0</div>
+          <div class="stat-label">تعداد دسته‌بندی‌ها</div>
+          <div class="stat-progress">
+            <div class="progress-bar categories" id="categories-progress" style="width: 0%"></div>
+          </div>
+          <div class="stat-percentage" id="categories-percentage">0% کاهش نسبت به ماه گذشته</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- نمودارها و گزارشات -->
+    <section class="charts-section">
+      <div class="section-header">
+        <h2>گزارشات و آمار</h2>
+        <div class="time-filter">
+          <button class="active" onclick="changeTimeRange('week')">هفته جاری</button>
+          <button onclick="changeTimeRange('month')">ماه جاری</button>
+          <button onclick="changeTimeRange('year')">سال جاری</button>
+        </div>
+      </div>
+
+      <div class="charts-grid">
+        <!-- نمودار پست‌ها -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <div class="chart-title">تعداد پست‌ها بر اساس ماه</div>
+          </div>
+          <div class="chart-container">
+            <canvas id="postsChart"></canvas>
+          </div>
+        </div>
+
+        <!-- نمودار کامنت‌ها -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <div class="chart-title">تعداد کامنت‌ها بر اساس ماه</div>
+          </div>
+          <div class="chart-container">
+            <canvas id="commentsChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- آخرین فعالیت‌ها -->
+    <section class="activity-section">
+      <div class="section-header">
+        <h2>آخرین فعالیت‌ها</h2>
+      </div>
+
+      <div class="activity-timeline">
+        <div class="activity-list" id="activity-list">
+          <!-- فعالیت‌ها به صورت داینامیک اضافه می‌شوند -->
+        </div>
+      </div>
+    </section>
+
+    <!-- آخرین کامنت‌ها -->
+    <section class="activity-section">
+      <div class="section-header">
+        <h2>آخرین کامنت‌ها</h2>
+        <a href="/comments/admin" class="btn btn-outline btn-sm">مشاهده همه</a>
+      </div>
+
+      <div class="recent-comments">
+        <div class="comment-list" id="recent-comments">
+          <!-- کامنت‌ها به صورت داینامیک اضافه می‌شوند -->
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- فوتر -->
+<footer>
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-about">
+        <h3>درباره TBlog</h3>
+        <p>TBlog مرجع تخصصی مقالات فناوری، برنامه‌نویسی و طراحی است که با هدف اشتراک دانش و تجربه ایجاد شده است.</p>
+        <div class="social-links">
+          <a href="#" class="social-link"><i class="fab fa-telegram"></i></a>
+          <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+          <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+
+      <div class="footer-links">
+        <h3>لینک‌های سریع</h3>
+        <ul>
+          <li><a href="/">خانه</a></li>
+          <li><a href="/posts">مقالات</a></li>
+          <li><a href="/categories">دسته‌بندی‌ها</a></li>
+          <li><a href="/about">درباره ما</a></li>
+          <li><a href="/contact">تماس با ما</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-links">
+        <h3>بخش مدیریت</h3>
+        <ul>
+          <li><a href="/dashboard">داشبورد</a></li>
+          <li><a href="/posts/admin">مدیریت پست‌ها</a></li>
+          <li><a href="/comments/admin">مدیریت کامنت‌ها</a></li>
+          <li><a href="/users/admin">مدیریت کاربران</a></li>
+          <li><a href="/settings">تنظیمات</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="copyright">
+      <p>کلیه حقوق محفوظ است © ۱۴۰۳ - TBlog - سیستم مدیریت محتوا</p>
+    </div>
+  </div>
+</footer>
+
+<!-- Chart.js Library -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+  // CSRF Token
+  const CSRF_TOKEN = document.querySelector('meta[name="_csrf"]')?.getAttribute('content') || '';
+  const CSRF_HEADER = document.querySelector('meta[name="_csrf_header"]')?.getAttribute('content') || 'X-CSRF-TOKEN';
+
+  // متغیرهای سراسری
+  let postsChart, commentsChart;
+  let currentTimeRange = 'week';
+
+  // بارگذاری اولیه
+  document.addEventListener('DOMContentLoaded', () => {
+    initializeDashboard();
+    loadDashboardData();
+    updateDateTime();
+    setupEventListeners();
+
+    // بروزرسانی زمان هر ثانیه
+    setInterval(updateDateTime, 1000);
+  });
+
+  function initializeDashboard() {
+    initializeCharts();
+    loadSampleActivities();
+    loadSampleComments();
+  }
+
+  function setupEventListeners() {
+    // مدیریت منوی موبایل
+    document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+      const navMenu = document.querySelector('.nav-menu');
+      const icon = this.querySelector('i');
+
+      navMenu.classList.toggle('active');
+      if (navMenu.classList.contains('active')) {
+        icon.classList.remove('fa-bars');
+        icon.classList.add('fa-times');
+      } else {
+        icon.classList.remove('fa-times');
+        icon.classList.add('fa-bars');
+      }
+    });
+
+    // مدیریت سایدبار در موبایل
+    const sidebarToggle = document.createElement('button');
+    sidebarToggle.innerHTML = '<i class="fas fa-bars"></i>';
+    sidebarToggle.className = 'btn btn-primary btn-sm';
+    sidebarToggle.style.position = 'fixed';
+    sidebarToggle.style.bottom = '20px';
+    sidebarToggle.style.right = '20px';
+    sidebarToggle.style.zIndex = '999';
+    sidebarToggle.style.display = 'none';
+    sidebarToggle.id = 'sidebarToggle';
+    sidebarToggle.onclick = () => {
+      document.getElementById('sidebar').classList.toggle('active');
+    };
+    document.body.appendChild(sidebarToggle);
+
+    // نمایش/پنهان کردن دکمه سایدبار در موبایل
+    function checkScreenSize() {
+      if (window.innerWidth <= 992) {
+        sidebarToggle.style.display = 'block';
+      } else {
+        sidebarToggle.style.display = 'none';
+        document.getElementById('sidebar').classList.remove('active');
+      }
+    }
+
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+
+    // بستن منوها با کلیک روی لینک
+    document.querySelectorAll('.nav-menu a, .sidebar-nav a').forEach(link => {
+      link.addEventListener('click', () => {
+        document.querySelector('.nav-menu').classList.remove('active');
+        document.querySelector('.mobile-menu-btn i').classList.remove('fa-times');
+        document.querySelector('.mobile-menu-btn i').classList.add('fa-bars');
+
+        if (window.innerWidth <= 992) {
+          document.getElementById('sidebar').classList.remove('active');
+        }
+      });
+    });
+  }
+
+  function updateDateTime() {
+    const now = new Date();
+
+    // تاریخ شمسی
+    const options = {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      weekday: 'long'
+    };
+    const persianDate = new Intl.DateTimeFormat('fa-IR', options).format(now);
+    document.getElementById('current-date').textContent = persianDate;
+
+    // زمان
+    const timeOptions = {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit'
+    };
+    const persianTime = new Intl.DateTimeFormat('fa-IR', timeOptions).format(now);
+    document.getElementById('current-time').textContent = persianTime;
+  }
+
+  async function loadDashboardData() {
+    try {
+      // بارگذاری آمار کلی
+      const statsResponse = await fetch('/api/dashboard/stats');
+      if (statsResponse.ok) {
+        const stats = await statsResponse.json();
+        updateStats(stats);
+      }
+
+      // بارگذاری داده‌های نمودار
+      const chartResponse = await fetch(`/api/dashboard/charts?range=${currentTimeRange}`);
+      if (chartResponse.ok) {
+        const chartData = await chartResponse.json();
+        updateCharts(chartData);
+      }
+
+    } catch (err) {
+      console.error("خطا در بارگذاری داده‌های داشبورد:", err);
+      loadSampleData();
+    }
+  }
+
+  function updateStats(stats) {
+    // به‌روزرسانی آمار با انیمیشن
+    animateValue('total-posts', 0, stats.totalPosts || 125, 1000);
+    animateValue('total-comments', 0, stats.totalComments || 845, 1000);
+    animateValue('total-users', 0, stats.totalUsers || 42, 1000);
+    animateValue('total-categories', 0, stats.totalCategories || 8, 1000);
+
+    // به‌روزرسانی نوارهای پیشرفت
+    animateProgress('posts-progress', stats.postsPercentage || 75);
+    animateProgress('comments-progress', stats.commentsPercentage || 60);
+    animateProgress('users-progress', stats.usersPercentage || 45);
+    animateProgress('categories-progress', stats.categoriesPercentage || 30);
+
+    // به‌روزرسانی درصدها
+    document.getElementById('posts-percentage').textContent =
+            `${stats.postsGrowth || 12}% افزایش نسبت به ماه گذشته`;
+    document.getElementById('comments-percentage').textContent =
+            `${stats.commentsGrowth || 24}% افزایش نسبت به ماه گذشته`;
+    document.getElementById('users-percentage').textContent =
+            `${stats.usersGrowth || 8}% افزایش نسبت به ماه گذشته`;
+    document.getElementById('categories-percentage').textContent =
+            `${stats.categoriesGrowth || -3}% کاهش نسبت به ماه گذشته`;
+  }
+
+  function animateValue(elementId, start, end, duration) {
+    const element = document.getElementById(elementId);
+    if (!element) return;
+
+    const startTime = performance.now();
+
+    function update(currentTime) {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+
+      const current = Math.floor(start + (end - start) * progress);
+      element.textContent = current.toLocaleString('fa-IR');
+
+      if (progress < 1) {
+        requestAnimationFrame(update);
+      }
+    }
+
+    requestAnimationFrame(update);
+  }
+
+  function animateProgress(elementId, targetPercent) {
+    const element = document.getElementById(elementId);
+    if (!element) return;
+
+    element.style.width = '0%';
+
+    setTimeout(() => {
+      element.style.transition = 'width 1.5s ease-in-out';
+      element.style.width = targetPercent + '%';
+    }, 500);
+  }
+
+  function initializeCharts() {
+    const postsCtx = document.getElementById('postsChart').getContext('2d');
+    const commentsCtx = document.getElementById('commentsChart').getContext('2d');
+
+    // تنظیمات مشترک نمودارها
+    const chartOptions = {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          rtl: true,
+          titleFont: { family: 'Vazirmatn' },
+          bodyFont: { family: 'Vazirmatn' },
+          padding: 10,
+          backgroundColor: 'rgba(30, 30, 30, 0.9)',
+          titleColor: '#f0f0f0',
+          bodyColor: '#b0b0b0',
+          borderColor: '#333333',
+          borderWidth: 1
+        }
+      },
+      scales: {
+        x: {
+          grid: {
+            color: 'rgba(255, 255, 255, 0.1)'
+          },
+          ticks: {
+            color: '#b0b0b0',
+            font: { family: 'Vazirmatn' }
+          }
+        },
+        y: {
+          beginAtZero: true,
+          grid: {
+            color: 'rgba(255, 255, 255, 0.1)'
+          },
+          ticks: {
+            color: '#b0b0b0',
+            font: { family: 'Vazirmatn' }
+          }
+        }
+      }
+    };
+
+    // نمودار پست‌ها
+    postsChart = new Chart(postsCtx, {
+      type: 'bar',
+      data: {
+        labels: ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور'],
+        datasets: [{
+          label: 'تعداد پست‌ها',
+          data: [12, 19, 8, 15, 22, 18],
+          backgroundColor: 'rgba(125, 39, 218, 0.6)',
+          borderColor: 'rgba(125, 39, 218, 1)',
+          borderWidth: 1,
+          borderRadius: 8,
+          borderSkipped: false
+        }]
+      },
+      options: chartOptions
+    });
+
+    // نمودار کامنت‌ها
+    commentsChart = new Chart(commentsCtx, {
+      type: 'line',
+      data: {
+        labels: ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور'],
+        datasets: [{
+          label: 'تعداد کامنت‌ها',
+          data: [45, 68, 52, 89, 76, 94],
+          backgroundColor: 'rgba(59, 130, 246, 0.1)',
+          borderColor: 'rgba(59, 130, 246, 1)',
+          borderWidth: 3,
+          tension: 0.3,
+          fill: true,
+          pointBackgroundColor: 'rgba(59, 130, 246, 1)',
+          pointBorderColor: '#ffffff',
+          pointBorderWidth: 2,
+          pointRadius: 6,
+          pointHoverRadius: 8
+        }]
+      },
+      options: chartOptions
+    });
+  }
+
+  function updateCharts(chartData) {
+    if (!chartData) return;
+
+    // بروزرسانی نمودار پست‌ها
+    if (chartData.posts) {
+      postsChart.data.labels = chartData.posts.labels || postsChart.data.labels;
+      postsChart.data.datasets[0].data = chartData.posts.data || postsChart.data.datasets[0].data;
+      postsChart.update();
+    }
+
+    // بروزرسانی نمودار کامنت‌ها
+    if (chartData.comments) {
+      commentsChart.data.labels = chartData.comments.labels || commentsChart.data.labels;
+      commentsChart.data.datasets[0].data = chartData.comments.data || commentsChart.data.datasets[0].data;
+      commentsChart.update();
+    }
+  }
+
+  function changeTimeRange(range) {
+    currentTimeRange = range;
+
+    // بروزرسانی دکمه‌های فعال
+    document.querySelectorAll('.time-filter button').forEach(btn => {
+      btn.classList.remove('active');
+    });
+    event.target.classList.add('active');
+
+    // بارگذاری داده‌های جدید
+    loadDashboardData();
+  }
+
+  function loadSampleData() {
+    // داده‌های نمونه برای نمایش اولیه
+    const sampleStats = {
+      totalPosts: 125,
+      totalComments: 845,
+      totalUsers: 42,
+      totalCategories: 8,
+      postsPercentage: 75,
+      commentsPercentage: 60,
+      usersPercentage: 45,
+      categoriesPercentage: 30,
+      postsGrowth: 12,
+      commentsGrowth: 24,
+      usersGrowth: 8,
+      categoriesGrowth: -3
+    };
+
+    updateStats(sampleStats);
+  }
+
+  function loadSampleActivities() {
+    const activities = [
+      {
+        time: '۲ دقیقه پیش',
+        icon: 'fas fa-user-plus',
+        title: 'کاربر جدید ثبت‌نام کرد',
+        description: 'کاربر با نام کاربری "ahmadrezai" در سایت ثبت‌نام کرد.'
+      },
+      {
+        time: '۱۵ دقیقه پیش',
+        icon: 'fas fa-comment',
+        title: 'کامنت جدید دریافت شد',
+        description: 'یک کامنت جدید در پست "آموزش React" ثبت شده است.'
+      },
+      {
+        time: '۱ ساعت پیش',
+        icon: 'fas fa-newspaper',
+        title: 'پست جدید منتشر شد',
+        description: 'پست "مقدمه‌ای بر هوش مصنوعی" توسط مدیر منتشر شد.'
+      },
+      {
+        time: '۲ ساعت پیش',
+        icon: 'fas fa-thumbs-up',
+        title: 'کامنت تأیید شد',
+        description: 'کامنت کاربر "maryam" در پست "جاوااسکریپت مدرن" تأیید شد.'
+      },
+      {
+        time: '۳ ساعت پیش',
+        icon: 'fas fa-chart-line',
+        title: 'گزارش ماهانه آماده شد',
+        description: 'گزارش عملکرد ماهانه سایت به صورت خودکار تولید شد.'
+      }
+    ];
+
+    const activityList = document.getElementById('activity-list');
+    activityList.innerHTML = '';
+
+    activities.forEach(activity => {
+      const activityItem = document.createElement('div');
+      activityItem.className = 'activity-item';
+      activityItem.innerHTML = `
+                <div class="activity-time">${activity.time}</div>
+                <div class="activity-content">
+                    <h4>
+                        <i class="${activity.icon}"></i>
+                        ${activity.title}
+                    </h4>
+                    <p>${activity.description}</p>
+                </div>
+            `;
+      activityList.appendChild(activityItem);
+    });
+  }
+
+  function loadSampleComments() {
+    const comments = [
+      {
+        id: 1,
+        author: 'محمد رضایی',
+        avatar: 'م',
+        time: '۱۰ دقیقه پیش',
+        text: 'مقاله بسیار مفیدی بود. ممنون از زحمات شما.',
+        post: 'آموزش جامع Spring Boot'
+      },
+      {
+        id: 2,
+        author: 'فاطمه کریمی',
+        avatar: 'ف',
+        time: '۴۵ دقیقه پیش',
+        text: 'لطفاً در مورد امنیت در برنامه‌نویسی وب بیشتر بنویسید.',
+        post: 'مقدمه‌ای بر امنیت سایبری'
+      },
+      {
+        id: 3,
+        author: 'علی محمدی',
+        avatar: 'ع',
+        time: '۲ ساعت پیش',
+        text: 'مطالب به روز و کاربردی. منتظر آموزش‌های بعدی هستم.',
+        post: 'بررسی فریمورک‌های Frontend در سال ۱۴۰۳'
+      }
+    ];
+
+    const commentList = document.getElementById('recent-comments');
+    commentList.innerHTML = '';
+
+    comments.forEach(comment => {
+      const commentItem = document.createElement('div');
+      commentItem.className = 'comment-item';
+      commentItem.innerHTML = `
+                <div class="comment-avatar">${comment.avatar}</div>
+                <div class="comment-content">
+                    <div class="comment-header">
+                        <div class="comment-author">${comment.author}</div>
+                        <div class="comment-time">${comment.time}</div>
+                    </div>
+                    <div class="comment-text">${comment.text}</div>
+                    <a href="/posts/view/1" class="comment-post">
+                        <i class="fas fa-external-link-alt"></i>
+                        ${comment.post}
+                    </a>
+                </div>
+            `;
+      commentList.appendChild(commentItem);
+    });
+  }
+
+  // شبیه‌سازی کاربران آنلاین
+  function updateOnlineUsers() {
+    const onlineCount = Math.floor(Math.random() * 10) + 8; // عدد تصادفی بین ۸ تا ۱۷
+    document.getElementById('online-users').textContent = onlineCount;
+  }
+
+  // بروزرسانی کاربران آنلاین هر ۳۰ ثانیه
+  setInterval(updateOnlineUsers, 30000);
+  updateOnlineUsers();
+
+  // بارگذاری مجدد داده‌ها هر ۲ دقیقه
+  setInterval(loadDashboardData, 120000);
+</script>
+</body>
+</html>

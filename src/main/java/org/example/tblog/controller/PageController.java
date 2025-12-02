@@ -66,4 +66,10 @@ public class PageController {
         return "admin/users";
     }
 
+    @GetMapping("/admin/dashboard")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String adminDashboard() {
+        return "admin/dashboard";
+    }
+
 }

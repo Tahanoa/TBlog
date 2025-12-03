@@ -26,36 +26,78 @@ public class CommentController {
         this.postService = postService;
     }
 
-        @GetMapping("/post/{postId}")
-        public ResponseEntity<List<CommentDto>> getByPostId(@PathVariable Integer postId) {
-            List<Comment> comments = commentService.findByPostId(postId);
-            List<CommentDto> dtos = comments.stream()
-                    .map(c -> new CommentDto(c.getId(), c.getContent(), c.getAuthorName(),
-                            c.getAuthorEmail(), c.getApproved(), c.getPost().getId(), c.getCreatedAt()))
-                    .toList();
-            return ResponseEntity.ok(dtos);
-        }
-
+    @GetMapping("/post/{postId}")
+    public ResponseEntity<List<CommentDto>> getByPostId(@PathVariable Integer postId) {
+        List<Comment> comments = commentService.findByPostId(postId);
+        List<CommentDto> dtos = comments.stream()
+                .map(c -> new CommentDto(
+                        c.getId(),
+                        c.getContent(),
+                        c.getAuthorName(),
+                        c.getAuthorEmail(),
+                        c.getApproved(),
+                        c.getPost() != null ? c.getPost().getId() : null,
+                        c.getCreatedAt()
+                ))
+                .toList();
+        return ResponseEntity.ok(dtos);
+    }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Comment> getCommentById(@PathVariable int id) {
+    public ResponseEntity<CommentDto> getCommentById(@PathVariable int id) {
         Optional<Comment> comment = commentService.findById(id);
-        return comment.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        return comment.map(c -> ResponseEntity.ok(
+                new CommentDto(
+                        c.getId(),
+                        c.getContent(),
+                        c.getAuthorName(),
+                        c.getAuthorEmail(),
+                        c.getApproved(),
+                        c.getPost() != null ? c.getPost().getId() : null,
+                        c.getCreatedAt()
+                )
+        )).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
     public ResponseEntity<?> saveComment(@Valid @RequestBody CommentDto commentDto) {
         try {
-            Comment comment = convertToEntity(commentDto);
-            comment.setApproved(0);
+            System.out.println("دریافت CommentDto: " + commentDto);
+            System.out.println("postId: " + commentDto.getPostId());
+            System.out.println("authorName: " + commentDto.getAuthorName());
+            System.out.println("authorEmail: " + commentDto.getAuthorEmail());
+
+            // اعتبارسنجی دستی برای اطمینان
+            if (commentDto.getPostId() == null || commentDto.getPostId() <= 0) {
+                return ResponseEntity.badRequest().body("Post ID is required and must be positive");
+            }
+
+            Comment comment = new Comment();
+            comment.setContent(commentDto.getContent());
+            comment.setAuthorName(commentDto.getAuthorName());
+            comment.setAuthorEmail(commentDto.getAuthorEmail());
+            comment.setApproved(0); // پیش‌فرض تایید نشده
+
+            // یافتن پست
+            Post post = postService.findById(commentDto.getPostId())
+                    .orElseThrow(() -> new IllegalArgumentException("Post not found with id " + commentDto.getPostId()));
+            comment.setPost(post);
+
             Comment savedComment = commentService.save(comment);
-            return ResponseEntity.ok(savedComment);
+
+            // بروزرسانی DTO با اطلاعات ذخیره شده
+            commentDto.setId(savedComment.getId());
+            commentDto.setApproved(savedComment.getApproved());
+            commentDto.setCreatedAt(savedComment.getCreatedAt());
+
+            return ResponseEntity.ok(commentDto);
+
         } catch (Exception e) {
+            System.err.println("خطا در ذخیره کامنت: " + e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.badRequest().body("خطا در ذخیره کامنت: " + e.getMessage());
         }
     }
-
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteComment(@PathVariable int id) {
@@ -72,7 +114,7 @@ public class CommentController {
                 c.getAuthorName(),
                 c.getAuthorEmail(),
                 c.getApproved(),
-                c.getPost() != null ? c.getPost().getId() : 0,
+                c.getPost() != null ? c.getPost().getId() : null,
                 c.getCreatedAt()
         ));
         return ResponseEntity.ok(dtos);
@@ -89,28 +131,18 @@ public class CommentController {
         comment.setApproved(1);
         Comment updated = commentService.save(comment);
 
-        return ResponseEntity.ok(new CommentDto(
+        CommentDto dto = new CommentDto(
                 updated.getId(),
                 updated.getContent(),
                 updated.getAuthorName(),
                 updated.getAuthorEmail(),
                 updated.getApproved(),
-                updated.getPost() != null ? updated.getPost().getId() : 0,
+                updated.getPost() != null ? updated.getPost().getId() : null,
                 updated.getCreatedAt()
-        ));
+        );
+
+        return ResponseEntity.ok(dto);
     }
 
-    private Comment convertToEntity(CommentDto dto) {
-        Comment comment = new Comment();
-        comment.setContent(dto.content());
-        comment.setAuthorName(dto.authorName());
-        comment.setAuthorEmail(dto.authorEmail());
-
-        if (dto.postId() > 0) {
-            Post post = postService.findById(dto.postId())
-                    .orElseThrow(() -> new IllegalArgumentException("Post not found with id " + dto.postId()));
-            comment.setPost(post);
-        }
-        return comment;
-    }
+    // حذف متد convertToEntity چون در saveComment استفاده نمی‌شود
 }

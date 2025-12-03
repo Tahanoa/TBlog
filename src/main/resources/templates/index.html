@@ -604,7 +604,6 @@
         </div>
     </div>
 </section>
-
 <!-- بخش پست‌های ویژه -->
 <section class="featured-posts">
     <div class="container">
@@ -623,52 +622,53 @@
             </div>
 
             <!-- لیست پست‌ها -->
-            <div th:each="post : ${posts.content}"
-                 class="post-card"
-                 onclick="window.location.href='/posts/view/' + ${post.slug}">
+            <div th:each="post : ${posts.content}" class="post-card">
+                <!-- لینک دور کل محتوا -->
+                <a th:href="@{'/posts/view/' + ${post.slug}}" class="post-link" style="display: block; text-decoration: none; color: inherit;">
 
-                <!-- تصویر پست -->
-                <img th:src="${post.imageUrl != null && post.imageUrl != '' ? post.imageUrl : 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'}"
-                     alt="تصویر پست" class="post-image">
+                    <!-- تصویر پست -->
+                    <img th:src="${post.imageUrl != null && post.imageUrl != '' ? post.imageUrl : 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'}"
+                         alt="تصویر پست" class="post-image">
 
-                <div class="post-content">
-                    <!-- دسته‌بندی -->
-                    <span class="post-category"
-                          th:text="${post.category != null ? post.category.name : 'بدون دسته'}">
-                    </span>
-
-                    <!-- عنوان -->
-                    <h3 class="post-title" th:text="${post.title}">عنوان پست</h3>
-
-                    <!-- خلاصه -->
-                    <p class="post-excerpt" th:text="${post.excerpt != null && post.excerpt != '' ? post.excerpt : 'بدون خلاصه'}">
-                        خلاصه پست
-                    </p>
-
-                    <!-- تگ‌ها -->
-                    <div th:if="${post.tags != null && !post.tags.empty}" class="tags-container">
-                        <span th:each="tag : ${post.tags}" class="tag" th:text="${tag.name}">
-                            تگ
+                    <div class="post-content">
+                        <!-- دسته‌بندی -->
+                        <span class="post-category"
+                              th:text="${post.category != null ? post.category.name : 'بدون دسته'}">
                         </span>
-                    </div>
 
-                    <!-- اطلاعات پست -->
-                    <div class="post-meta">
-                        <div class="post-author">
-                            <div class="author-avatar">
-                                <span th:text="${post.author != null && post.author.fullName != null ? post.author.fullName.charAt(0) : '?'}">
-                                    A
-                                </span>
-                            </div>
-                            <span th:text="${post.author != null ? post.author.fullName : 'نویسنده ناشناس'}">
-                                نویسنده
+                        <!-- عنوان -->
+                        <h3 class="post-title" th:text="${post.title}">عنوان پست</h3>
+
+                        <!-- خلاصه -->
+                        <p class="post-excerpt" th:text="${post.excerpt != null && post.excerpt != '' ? post.excerpt : 'بدون خلاصه'}">
+                            خلاصه پست
+                        </p>
+
+                        <!-- تگ‌ها -->
+                        <div th:if="${post.tags != null && !post.tags.empty}" class="tags-container">
+                            <span th:each="tag : ${post.tags}" class="tag" th:text="${tag.name}">
+                                تگ
                             </span>
                         </div>
-                        <span th:text="${post.publishedAt != null ? #temporals.format(post.publishedAt, 'yyyy/MM/dd') : 'بدون تاریخ'}">
-                            تاریخ
-                        </span>
+
+                        <!-- اطلاعات پست -->
+                        <div class="post-meta">
+                            <div class="post-author">
+                                <div class="author-avatar">
+                                    <span th:text="${post.author != null && post.author.fullName != null ? post.author.fullName.charAt(0) : '?'}">
+                                        A
+                                    </span>
+                                </div>
+                                <span th:text="${post.author != null ? post.author.fullName : 'نویسنده ناشناس'}">
+                                    نویسنده
+                                </span>
+                            </div>
+                            <span th:text="${post.publishedAt != null ? #temporals.format(post.publishedAt, 'yyyy/MM/dd') : 'بدون تاریخ'}">
+                                تاریخ
+                            </span>
+                        </div>
                     </div>
-                </div>
+                </a>
             </div>
         </div>
 
@@ -753,7 +753,7 @@
 
 <script>
     // مدیریت منوی موبایل
-    document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+    document.getElementById('mobileMenuBtn').addEventListener('click', function () {
         const navMenu = document.querySelector('.nav-menu');
         const icon = this.querySelector('i');
 
@@ -816,7 +816,7 @@
     });
 
     // فرمت تاریخ برای نمایش بهتر
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         // اگر تاریخ‌ها نیاز به فرمت خاصی دارند، اینجا می‌توانید تغییر دهید
         const dates = document.querySelectorAll('.post-meta span:last-child');
         dates.forEach(dateElement => {
@@ -832,7 +832,7 @@
 
     // مدیریت کلیک روی کارت‌ها
     document.querySelectorAll('.post-card').forEach(card => {
-        card.addEventListener('click', function(e) {
+        card.addEventListener('click', function (e) {
             // جلوگیری از کلیک روی لینک‌های داخل کارت
             if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON') {
                 return;

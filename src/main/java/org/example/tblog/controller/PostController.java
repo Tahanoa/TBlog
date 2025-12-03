@@ -163,14 +163,21 @@ public class PostController {
         postService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
-
+    // در PostController، متد getPostWithComments را به‌روزرسانی کنید
     @GetMapping("/{id}/with-comments")
     public ResponseEntity<PostAndCommentDto> getPostWithComments(@PathVariable Integer id) {
         return postService.findById(id)
                 .map(post -> {
                     List<CommentDto> commentDtos = post.getComments().stream()
-                            .map(c -> new CommentDto(c.getId(), c.getContent(), c.getAuthorName(),
-                                    c.getAuthorEmail(), c.getApproved(), c.getPost().getId() , c.getCreatedAt()))
+                            .map(c -> new CommentDto(
+                                    c.getId(),
+                                    c.getContent(),
+                                    c.getAuthorName(),
+                                    c.getAuthorEmail(),
+                                    c.getApproved(),
+                                    c.getPost() != null ? c.getPost().getId() : null,
+                                    c.getCreatedAt()
+                            ))
                             .toList();
                     PostAndCommentDto dto = new PostAndCommentDto();
                     dto.setPostId(post.getId());
@@ -188,6 +195,5 @@ public class PostController {
                 })
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
-
 
 }
